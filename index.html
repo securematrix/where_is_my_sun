@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Where Is My Sun ☀️</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FFC107;
+            --primary-dark: #E6900B;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a3a 0%, #2c3e50 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Full Screen Background */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .background-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+        }
+
+        /* Fallback gradient if image doesn't load */
+        .background-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2c3e50 0%, #fd746c 100%);
+            z-index: -1;
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+
+        header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            z-index: 10;
+            width: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 1.8rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .logo-text {
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .icon-button {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 10px;
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            text-decoration: none;
+        }
+
+        .icon-button:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .icon-button i {
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 90%;
+            width: 400px;
+            box-shadow: var(--shadow);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .modal-body {
+            line-height: 1.6;
+        }
+
+        .modal-body p {
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        /* Centered Square Form - FIXED DROPDOWN */
+        .form-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .glass-form {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .glass-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .form-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 1rem;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .select-wrapper::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            pointer-events: none;
+            font-size: 0.8rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--text-light);
+            transition: var(--transition);
+            appearance: none;
+            cursor: pointer;
+            font-weight: 500;
+            box-sizing: border-box;
+            /* Fix for mobile dropdown sizing */
+            max-width: 100%;
+            min-height: 50px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.25);
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        select option {
+            background: #2c3e50;
+            color: var(--text-light);
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        .current-time {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: 500;
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            font-size: 1rem;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            transition: var(--transition);
+        }
+
+        .current-time:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--text-dark);
+            border: none;
+            padding: 16px 25px;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: block;
+            width: 100%;
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.7s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(255, 193, 7, 0.5);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* Result Section */
+        .result-container {
+            text-align: center;
+            padding: 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 20px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+            display: none;
+            max-width: 500px;
+            width: 100%;
+            transition: var(--transition);
+        }
+
+        .result-container:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .bus-icon {
+            font-size: 4rem;
+            margin: 15px 0 20px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        }
+
+        .route-info {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .sunlight-info {
+            font-size: 1.4rem;
+            margin: 20px 0;
+            color: var(--primary);
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .recommendation {
+            font-size: 1.2rem;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 193, 7, 0.15);
+            border-radius: 15px;
+            border-left: 5px solid var(--primary);
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .night-message {
+            font-size: 1.2rem;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(100, 149, 237, 0.15);
+            border-radius: 15px;
+            border-left: 5px solid #6495ED;
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-light);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            margin-top: 20px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Footer */
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            font-weight: 500;
+        }
+
+        /* Mobile Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                justify-content: flex-start;
+                padding-top: 80px;
+            }
+            
+            header {
+                padding: 15px;
+                position: fixed;
+                background: rgba(0, 0, 0, 0.3);
+                backdrop-filter: blur(10px);
+            }
+            
+            .logo-text {
+                font-size: 1.2rem;
+            }
+            
+            .logo-icon {
+                font-size: 1.5rem;
+            }
+            
+            .glass-form, .result-container {
+                padding: 25px;
+                border-radius: 18px;
+                max-width: 100%;
+            }
+            
+            .form-title {
+                font-size: 1.7rem;
+            }
+            
+            .form-subtitle {
+                font-size: 0.9rem;
+            }
+            
+            select {
+                padding: 12px 14px;
+                font-size: 0.95rem;
+                min-height: 48px;
+            }
+            
+            .btn {
+                padding: 14px 20px;
+                font-size: 1rem;
+            }
+            
+            .modal-content {
+                padding: 25px;
+                width: 90%;
+                max-width: 350px;
+            }
+            
+            .modal-title {
+                font-size: 1.3rem;
+            }
+            
+            .icon-button {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .icon-button i {
+                font-size: 1rem;
+            }
+        }
+
+        /* FIX: Ensure dropdowns show properly on mobile */
+        select,
+        select option {
+            position: relative;
+            z-index: 100;
+            background-color: #2c3e50 !important;
+            color: #fff !important;
+        }
+
+        .select-wrapper {
+            z-index: 100;
+            position: relative;
+        }
+
+        /* Fix for iOS Safari dropdown zoom */
+        @media screen and (max-width: 768px) {
+            select, input, textarea {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            /* Ensure form stays centered on small screens */
+            .form-container {
+                width: 100%;
+                max-width: 100%;
+                padding: 0 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+            
+            .glass-form {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+                padding-top: 70px;
+            }
+            
+            .glass-form, .result-container {
+                padding: 20px;
+                border-radius: 16px;
+                max-width: 100%;
+            }
+            
+            .form-title {
+                font-size: 1.5rem;
+            }
+            
+            .logo-text {
+                font-size: 1.1rem;
+            }
+            
+            select {
+                padding: 11px 13px;
+                font-size: 0.9rem;
+                min-height: 46px;
+            }
+            
+            .bus-icon {
+                font-size: 3.5rem;
+            }
+            
+            .route-info {
+                font-size: 1.3rem;
+            }
+            
+            .sunlight-info, .recommendation, .night-message {
+                font-size: 1.1rem;
+            }
+            
+            footer {
+                font-size: 0.8rem;
+                padding: 15px;
+            }
+            
+            .header-buttons {
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .glass-form, .result-container {
+                padding: 18px;
+            }
+            
+            .form-title {
+                font-size: 1.4rem;
+            }
+            
+            .form-subtitle {
+                font-size: 0.85rem;
+            }
+            
+            select {
+                padding: 11px 13px;
+                font-size: 0.9rem;
+                min-height: 44px;
+            }
+            
+            .btn {
+                padding: 13px 18px;
+                font-size: 0.95rem;
+            }
+            
+            .icon-button {
+                width: 38px;
+                height: 38px;
+            }
+        }
+
+        /* Additional fix for very small screens */
+        @media (max-width: 320px) {
+            .container {
+                padding: 5px;
+                padding-top: 65px;
+            }
+            
+            .glass-form, .result-container {
+                padding: 15px;
+            }
+            
+            .form-title {
+                font-size: 1.3rem;
+            }
+            
+            .form-subtitle {
+                font-size: 0.8rem;
+            }
+            
+            select {
+                padding: 10px 12px;
+                font-size: 0.85rem;
+                min-height: 42px;
+            }
+            
+            .btn {
+                padding: 12px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Full Screen Background -->
+    <div class="background-container">
+        <img src="bgbus.jpeg" alt="Bus travel background" class="background-image">
+    </div>
+
+    <!-- Info Modal -->
+    <div class="modal" id="info-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">About Where Is My Sun</h3>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>🌤️ <strong>Where Is My Sun</strong> helps bus passengers in Kerala choose the best seat to avoid direct sunlight during their journey.</p>
+                <p>✨ <strong>How it works:</strong></p>
+                <p>• Select your starting point and destination</p>
+                <p>• The system analyzes the route direction and current time</p>
+                <p>• Get recommendations for which side of the bus to sit on to avoid sunlight</p>
+                <p>• During nighttime, enjoy comfortable seating without sun concerns</p>
+                <p>🚌 Travel smart and comfortably across Kerala!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">☀️</div>
+                <div class="logo-text">Where Is My Sun</div>
+            </div>
+            <div class="header-buttons">
+                <a href="https://github.com/securematrix" target="_blank" class="icon-button" title="Visit our GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <button class="icon-button" id="info-button" title="About this website">
+                    <i class="fas fa-question"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Centered Square Form -->
+        <div class="form-container" id="form-container">
+            <div class="glass-form">
+                <div class="form-header">
+                    <h2 class="form-title">🌤️ Where Is My Sun</h2>
+                    <p class="form-subtitle">Find the perfect seat away from sunlight</p>
+                </div>
+                
+                <form id="route-form">
+                    <div class="form-group">
+                        <label for="start-point">Starting Point</label>
+                        <div class="select-wrapper">
+                            <select id="start-point" required>
+                                <option value="">Select starting point</option>
+                                <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                                <option value="Kollam">Kollam</option>
+                                <option value="Pathanamthitta">Pathanamthitta</option>
+                                <option value="Alappuzha">Alappuzha</option>
+                                <option value="Kottayam">Kottayam</option>
+                                <option value="Idukki">Idukki</option>
+                                <option value="Ernakulam">Ernakulam</option>
+                                <option value="Thrissur">Thrissur</option>
+                                <option value="Palakkad">Palakkad</option>
+                                <option value="Malappuram">Malappuram</option>
+                                <option value="Kozhikode">Kozhikode</option>
+                                <option value="Wayanad">Wayanad</option>
+                                <option value="Kannur">Kannur</option>
+                                <option value="Kasaragod">Kasaragod</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="destination">Destination</label>
+                        <div class="select-wrapper">
+                            <select id="destination" required>
+                                <option value="">Select destination</option>
+                                <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                                <option value="Kollam">Kollam</option>
+                                <option value="Pathanamthitta">Pathanamthitta</option>
+                                <option value="Alappuzha">Alappuzha</option>
+                                <option value="Kottayam">Kottayam</option>
+                                <option value="Idukki">Idukki</option>
+                                <option value="Ernakulam">Ernakulam</option>
+                                <option value="Thrissur">Thrissur</option>
+                                <option value="Palakkad">Palakkad</option>
+                                <option value="Malappuram">Malappuram</option>
+                                <option value="Kozhikode">Kozhikode</option>
+                                <option value="Wayanad">Wayanad</option>
+                                <option value="Kannur">Kannur</option>
+                                <option value="Kasaragod">Kasaragod</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="current-time" id="current-time">
+                        <!-- Current time will be inserted by JavaScript -->
+                    </div>
+                    
+                    <button type="submit" class="btn" id="find-sun-btn">
+                        <i class="fas fa-sun"></i> Find My Sun
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results Container -->
+        <div class="result-container" id="result-container">
+            <div class="bus-icon">🚌</div>
+            
+            <div class="route-info" id="route-info">
+                <!-- Route info will be inserted by JavaScript -->
+            </div>
+            
+            <div class="sunlight-info" id="sunlight-info">
+                <!-- Sunlight info will be inserted by JavaScript -->
+            </div>
+            
+            <div class="recommendation" id="recommendation">
+                <!-- Recommendation will be inserted by JavaScript -->
+            </div>
+            
+            <div class="night-message" id="night-message" style="display: none;">
+                <!-- Night message will be inserted by JavaScript -->
+            </div>
+            
+            <button class="btn back-btn" id="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Form
+            </button>
+        </div>
+
+        <footer>
+            <p>Made by Secure Matrix</p>
+        </footer>
+    </div>
+
+    <script>
+        // City coordinates (approximate)
+        const cityCoordinates = {
+            "Thiruvananthapuram": { lat: 8.5241, lng: 76.9366 },
+            "Kollam": { lat: 8.8932, lng: 76.6141 },
+            "Pathanamthitta": { lat: 9.2642, lng: 76.7870 },
+            "Alappuzha": { lat: 9.4981, lng: 76.3388 },
+            "Kottayam": { lat: 9.5916, lng: 76.5222 },
+            "Idukki": { lat: 9.8496, lng: 76.9398 },
+            "Ernakulam": { lat: 9.9312, lng: 76.2673 },
+            "Thrissur": { lat: 10.5276, lng: 76.2144 },
+            "Palakkad": { lat: 10.7867, lng: 76.6548 },
+            "Malappuram": { lat: 11.0713, lng: 76.0662 },
+            "Kozhikode": { lat: 11.2588, lng: 75.7804 },
+            "Wayanad": { lat: 11.6850, lng: 76.1320 },
+            "Kannur": { lat: 11.8745, lng: 75.3704 },
+            "Kasaragod": { lat: 12.4996, lng: 74.9869 }
+        };
+
+        // DOM Elements
+        const routeForm = document.getElementById('route-form');
+        const formContainer = document.getElementById('form-container');
+        const resultContainer = document.getElementById('result-container');
+        const currentTimeElement = document.getElementById('current-time');
+        const routeInfoElement = document.getElementById('route-info');
+        const sunlightInfoElement = document.getElementById('sunlight-info');
+        const recommendationElement = document.getElementById('recommendation');
+        const nightMessageElement = document.getElementById('night-message');
+        const backButton = document.getElementById('back-btn');
+        const infoButton = document.getElementById('info-button');
+        const infoModal = document.getElementById('info-modal');
+        const closeModal = document.getElementById('close-modal');
+
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            const formattedTime = now.toLocaleDateString('en-US', options);
+            currentTimeElement.textContent = `Current Date & Time: ${formattedTime}`;
+        }
+
+        // Initialize time and update every minute
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // Check if it's nighttime (7 PM to 6 AM)
+        function isNightTime() {
+            const hour = new Date().getHours();
+            return hour >= 19 || hour < 6;
+        }
+
+        // Modal functionality
+        infoButton.addEventListener('click', function() {
+            infoModal.style.display = 'block';
+        });
+
+        closeModal.addEventListener('click', function() {
+            infoModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === infoModal) {
+                infoModal.style.display = 'none';
+            }
+        });
+
+        // Calculate direction based on coordinates
+        function calculateDirection(start, destination) {
+            const startCoords = cityCoordinates[start];
+            const destCoords = cityCoordinates[destination];
+            
+            if (!startCoords || !destCoords) return "Unknown";
+            
+            const latDiff = destCoords.lat - startCoords.lat;
+            const lngDiff = destCoords.lng - startCoords.lng;
+            
+            // Determine primary direction
+            if (Math.abs(lngDiff) > Math.abs(latDiff)) {
+                // East-West direction is more significant
+                return lngDiff > 0 ? "East" : "West";
+            } else {
+                // North-South direction is more significant
+                return latDiff > 0 ? "North" : "South";
+            }
+        }
+
+        // Determine sunlight exposure based on time and direction
+        function analyzeSunlight(direction, time) {
+            const hour = time.getHours();
+            let sunSide, recommendedSide;
+            
+            // Check if it's nighttime
+            if (isNightTime()) {
+                return { 
+                    sunSide: "No sunlight at night", 
+                    recommendedSide: "Any seat is comfortable",
+                    isNight: true
+                };
+            }
+            
+            // Daytime logic
+            if (hour >= 6 && hour < 11) {
+                // Morning: sun in the east
+                if (direction === "East" || direction === "North") {
+                    sunSide = "Right";
+                    recommendedSide = "Left";
+                } else {
+                    sunSide = "Left";
+                    recommendedSide = "Right";
+                }
+            } else if (hour >= 11 && hour < 16) {
+                // Afternoon: sun in the south-west
+                if (direction === "South" || direction === "West") {
+                    sunSide = "Left";
+                    recommendedSide = "Right";
+                } else {
+                    sunSide = "Right";
+                    recommendedSide = "Left";
+                }
+            } else {
+                // Evening: sun in the west
+                if (direction === "West" || direction === "North") {
+                    sunSide = "Left";
+                    recommendedSide = "Right";
+                } else {
+                    sunSide = "Right";
+                    recommendedSide = "Left";
+                }
+            }
+            
+            return { sunSide, recommendedSide, isNight: false };
+        }
+
+        // Handle form submission
+        routeForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const startPoint = document.getElementById('start-point').value;
+            const destination = document.getElementById('destination').value;
+            
+            if (!startPoint || !destination) {
+                alert("Please select both starting point and destination.");
+                return;
+            }
+            
+            if (startPoint === destination) {
+                alert("Starting point and destination cannot be the same.");
+                return;
+            }
+            
+            // Calculate results
+            const currentTime = new Date();
+            const direction = calculateDirection(startPoint, destination);
+            const { sunSide, recommendedSide, isNight } = analyzeSunlight(direction, currentTime);
+            
+            // Update results page
+            routeInfoElement.textContent = `${startPoint} → ${destination}`;
+            
+            if (isNight) {
+                // Hide daytime elements and show night message
+                sunlightInfoElement.style.display = 'none';
+                recommendationElement.style.display = 'none';
+                nightMessageElement.style.display = 'block';
+                nightMessageElement.textContent = "🌙 It's nighttime! No need to worry about sunlight. Enjoy your comfortable journey!";
+            } else {
+                // Show daytime elements and hide night message
+                sunlightInfoElement.style.display = 'block';
+                recommendationElement.style.display = 'block';
+                nightMessageElement.style.display = 'none';
+                sunlightInfoElement.textContent = `☀️ Sunlight will mostly be on the ${sunSide} side`;
+                recommendationElement.textContent = `✅ Best seats: ${recommendedSide} side near the window`;
+            }
+            
+            // Hide form and show results
+            formContainer.style.display = 'none';
+            resultContainer.style.display = 'block';
+            
+            // Scroll to results
+            resultContainer.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Handle back button
+        backButton.addEventListener('click', function() {
+            resultContainer.style.display = 'none';
+            formContainer.style.display = 'block';
+            routeForm.reset();
+            
+            // Scroll back to form
+            formContainer.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
